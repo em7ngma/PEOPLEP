@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#030505">
+  <meta name="description" content="People — La plataforma de eventos más exclusiva de Potosí.">
+  <title>People</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- ══════════════ SPLASH ══════════════ -->
+<div id="splash">
+  <div class="splash-wrap">
+    <div class="splash-logo">
+      <span class="s-icon">◈</span>
+      <span class="s-name">PEOPLE</span>
+    </div>
+    <div class="splash-bar"><div class="splash-fill"></div></div>
+    <p class="splash-hint">Preparando tu experiencia…</p>
+  </div>
+</div>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav id="navbar">
+  <div class="nb-wrap">
+    <button class="nb-brand" id="btn-brand">
+      <span class="s-icon nb-icon">◈</span>
+      <span class="nb-name">PEOPLE</span>
+    </button>
+    <div class="nb-tabs" id="nb-tabs">
+      <button class="nb-tab active" data-view="home">Inicio</button>
+      <button class="nb-tab" data-view="events">Eventos</button>
+      <button class="nb-tab" data-view="contact">Redes</button>
+      <button class="nb-tab admin-tab hidden" data-view="admin">Admin</button>
+    </div>
+    <!-- Sin sesión -->
+    <div class="nb-auth" id="nb-auth-guest">
+      <button class="nb-btn-login"  id="btn-open-login">Iniciar Sesión</button>
+      <button class="nb-btn-reg"    id="btn-open-reg">Registrarse</button>
+      <button class="nb-btn-admin"  id="btn-open-admin-modal">Admin</button>
+    </div>
+    <!-- Con sesión cliente -->
+    <div class="nb-auth hidden" id="nb-auth-user">
+      <button class="nb-tab" data-view="profile" id="btn-profile-tab">
+        <span id="nb-username">Perfil</span>
+      </button>
+      <button class="nb-btn-cart" id="btn-cart-nav">
+        🎟 <span id="cart-badge" class="badge hidden">0</span>
+      </button>
+    </div>
+    <!-- Con sesión admin -->
+    <div class="nb-auth hidden" id="nb-auth-admin">
+      <span class="nb-admin-label">⚙ Admin</span>
+      <button class="nb-btn-logout" id="btn-admin-logout">Salir</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+<!-- ══════════════════════════════════════
+     MODALES
+══════════════════════════════════════ -->
+
+<!-- Modal: Iniciar Sesión -->
+<div id="modal-login" class="modal hidden">
+  <div class="modal-bg" id="bg-login"></div>
+  <div class="modal-card auth-card">
+    <button class="mc-close" id="close-login">✕</button>
+    <div class="auth-logo"><span class="s-icon">◈</span> PEOPLE</div>
+    <h2 class="auth-title">Bienvenido</h2>
+    <p class="auth-sub">Inicia sesión para continuar</p>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <input type="email" id="li-email" placeholder="Correo electrónico" autocomplete="email">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M12 1a5 5 0 00-5 5v2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2h-2V6a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V6a3 3 0 013-3zm0 10a2 2 0 110 4 2 2 0 010-4z"/></svg>
+        <input type="password" id="li-pass" placeholder="Contraseña" autocomplete="current-password">
+      </div>
+    </div>
+    <div id="li-error" class="err-msg hidden">Correo o contraseña incorrectos.</div>
+    <button class="btn-cta full" id="btn-do-login">INICIAR SESIÓN</button>
+    <p class="auth-switch">¿Primera vez? <button class="link-btn" id="li-to-reg">Crear cuenta</button></p>
+  </div>
+</div>
+
+<!-- Modal: Registrarse -->
+<div id="modal-reg" class="modal hidden">
+  <div class="modal-bg" id="bg-reg"></div>
+  <div class="modal-card auth-card">
+    <button class="mc-close" id="close-reg">✕</button>
+    <div class="auth-logo"><span class="s-icon">◈</span> PEOPLE</div>
+    <h2 class="auth-title">Crea tu cuenta</h2>
+    <p class="auth-sub">Regístrate para comprar y guardar tus accesos</p>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>
+        <input type="text" id="rg-name" placeholder="Nombre completo">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        <input type="tel" id="rg-phone" placeholder="WhatsApp / Teléfono">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <input type="email" id="rg-email" placeholder="Correo electrónico">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M12 1a5 5 0 00-5 5v2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2h-2V6a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V6a3 3 0 013-3zm0 10a2 2 0 110 4 2 2 0 010-4z"/></svg>
+        <input type="password" id="rg-pass" placeholder="Contraseña (mín. 6 caracteres)">
+      </div>
+    </div>
+    <div id="rg-error" class="err-msg hidden"></div>
+    <button class="btn-cta full" id="btn-do-reg">CREAR CUENTA</button>
+    <p class="auth-switch">¿Ya tienes cuenta? <button class="link-btn" id="reg-to-li">Iniciar sesión</button></p>
+  </div>
+</div>
+
+<!-- Modal: Acceso Admin -->
+<div id="modal-admin-auth" class="modal hidden">
+  <div class="modal-bg" id="bg-admin-auth"></div>
+  <div class="modal-card auth-card">
+    <button class="mc-close" id="close-admin-auth">✕</button>
+    <div class="auth-logo"><span class="s-icon">◈</span> PEOPLE</div>
+    <h2 class="auth-title">Acceso Administrador</h2>
+    <p class="auth-sub">Área restringida al personal autorizado</p>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>
+        <input type="text" id="adm-user" placeholder="Usuario">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="inp-icon-wrap">
+        <svg class="inp-icon" viewBox="0 0 24 24"><path d="M12 1a5 5 0 00-5 5v2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2h-2V6a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V6a3 3 0 013-3zm0 10a2 2 0 110 4 2 2 0 010-4z"/></svg>
+        <input type="password" id="adm-pass" placeholder="Contraseña">
+      </div>
+    </div>
+    <div id="adm-error" class="err-msg hidden">Credenciales incorrectas.</div>
+    <button class="btn-cta full" id="btn-do-admin-login">INGRESAR</button>
+  </div>
+</div>
+
+<!-- Modal: Carrito -->
+<div id="modal-cart" class="modal hidden">
+  <div class="modal-bg" id="bg-cart"></div>
+  <div class="modal-card modal-wide">
+    <div class="mc-header">
+      <h2 class="mc-title">🎟 Carrito</h2>
+      <button class="mc-close" id="close-cart">✕</button>
+    </div>
+    <div id="cart-list"></div>
+    <div id="cart-empty" class="state-block hidden"><div class="st-icon">🎪</div><p>Tu carrito está vacío</p></div>
+    <div id="cart-foot" class="cart-foot hidden">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span id="cart-total" class="price-big">Bs. 0</span>
+      </div>
+      <button class="btn-cta" id="btn-checkout">Continuar al Pago →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Selección de Mesas -->
+<div id="modal-seats" class="modal hidden">
+  <div class="modal-bg" id="bg-seats"></div>
+  <div class="modal-card modal-wide">
+    <div class="mc-header">
+      <h2 class="mc-title" id="seats-title">Seleccionar Mesa</h2>
+      <button class="mc-close" id="close-seats">✕</button>
+    </div>
+    <p class="mc-sub" id="seats-sub"></p>
+    <div id="seats-zones"></div>
+    <div class="mc-actions">
+      <button class="btn-sec" id="btn-seats-cancel">Cancelar</button>
+      <button class="btn-cta" id="btn-seats-add" disabled>Agregar al Carrito</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Pasarela de Pago -->
+<div id="modal-pay" class="modal hidden">
+  <div class="modal-bg" id="bg-pay"></div>
+  <div class="modal-card modal-wide">
+    <div class="mc-header">
+      <h2 class="mc-title">💳 Método de Pago</h2>
+      <button class="mc-close" id="close-pay">✕</button>
+    </div>
+    <div class="pay-summary" id="pay-summary"></div>
+    <p class="pay-label">Selecciona tu método de pago:</p>
+    <div class="pay-methods" id="pay-methods">
+      <!-- QR -->
+      <div class="pay-method" data-method="qr">
+        <div class="pm-icon">📱</div>
+        <div class="pm-info">
+          <div class="pm-title">QR / Transferencia Bancaria</div>
+          <div class="pm-sub">Escanea el código y confirma</div>
+        </div>
+        <div class="pm-check hidden">✓</div>
+      </div>
+      <!-- Tarjeta -->
+      <div class="pay-method" data-method="card">
+        <div class="pm-icon">💳</div>
+        <div class="pm-info">
+          <div class="pm-title">Tarjeta Débito / Crédito</div>
+          <div class="pm-sub">Visa, Mastercard</div>
+        </div>
+        <div class="pm-check hidden">✓</div>
+      </div>
+      <!-- Efectivo -->
+      <div class="pay-method" data-method="cash">
+        <div class="pm-icon">💵</div>
+        <div class="pm-info">
+          <div class="pm-title">Efectivo / Boletería</div>
+          <div class="pm-sub">Reserva temporal — paga en taquilla</div>
+        </div>
+        <div class="pm-check hidden">✓</div>
+      </div>
+    </div>
+
+    <!-- Panel QR -->
+    <div id="pay-qr-panel" class="pay-panel hidden">
+      <div class="qr-box">
+        <div class="qr-visual">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+            <rect width="200" height="200" fill="#0d1515"/>
+            <!-- QR simulado decorativo -->
+            <rect x="20" y="20" width="60" height="60" fill="none" stroke="#15efe2" stroke-width="6"/>
+            <rect x="30" y="30" width="40" height="40" fill="#15efe2"/>
+            <rect x="120" y="20" width="60" height="60" fill="none" stroke="#15efe2" stroke-width="6"/>
+            <rect x="130" y="30" width="40" height="40" fill="#15efe2"/>
+            <rect x="20" y="120" width="60" height="60" fill="none" stroke="#15efe2" stroke-width="6"/>
+            <rect x="30" y="130" width="40" height="40" fill="#15efe2"/>
+            <rect x="90" y="20" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="30" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="40" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="50" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="60" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="70" width="10" height="10" fill="#15efe2"/>
+            <rect x="110" y="90" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="90" width="10" height="10" fill="#15efe2"/>
+            <rect x="120" y="90" width="10" height="10" fill="#15efe2"/>
+            <rect x="130" y="100" width="10" height="10" fill="#15efe2"/>
+            <rect x="140" y="110" width="10" height="10" fill="#15efe2"/>
+            <rect x="150" y="100" width="10" height="10" fill="#15efe2"/>
+            <rect x="160" y="110" width="10" height="10" fill="#15efe2"/>
+            <rect x="140" y="130" width="10" height="10" fill="#15efe2"/>
+            <rect x="150" y="140" width="10" height="10" fill="#15efe2"/>
+            <rect x="160" y="150" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="110" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="120" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="130" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="140" width="10" height="10" fill="#15efe2"/>
+            <rect x="90" y="150" width="10" height="10" fill="#15efe2"/>
+            <rect x="100" y="160" width="10" height="10" fill="#15efe2"/>
+          </svg>
+        </div>
+        <p class="qr-hint">Escanea este código con tu app bancaria</p>
+        <p class="qr-amount" id="qr-amount">Bs. 0</p>
+        <p class="qr-ref">Ref: <span id="qr-ref">PEOPLE-000000</span></p>
+      </div>
+    </div>
+
+    <!-- Panel Tarjeta -->
+    <div id="pay-card-panel" class="pay-panel hidden">
+      <div class="form-group">
+        <label>Número de tarjeta</label>
+        <input type="text" id="card-num" placeholder="1234 5678 9012 3456" maxlength="19">
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Fecha de expiración</label>
+          <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="card-cvv" placeholder="123" maxlength="4">
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Efectivo -->
+    <div id="pay-cash-panel" class="pay-panel hidden">
+      <div class="cash-info">
+        <div class="cash-icon">🏷</div>
+        <p>Tu reserva quedará pendiente. Acércate a la boletería el día del evento con tu código de comprobante.</p>
+        <p class="cash-warning">⚠ Las reservas no reclamadas se liberan 1 hora antes del evento.</p>
+      </div>
+    </div>
+
+    <div id="pay-error" class="err-msg hidden"></div>
+    <div class="mc-actions">
+      <button class="btn-sec" id="btn-pay-cancel">Cancelar</button>
+      <button class="btn-cta" id="btn-pay-confirm" disabled>Confirmar Pago</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Evento Form (Admin) -->
+<div id="modal-ef" class="modal hidden">
+  <div class="modal-bg" id="bg-ef"></div>
+  <div class="modal-card modal-wide">
+    <div class="mc-header">
+      <h2 class="mc-title" id="ef-label">Nuevo Evento</h2>
+      <button class="mc-close" id="close-ef">✕</button>
+    </div>
+    <div class="form-grid2">
+      <div class="form-group fg2-full">
+        <label>Título *</label>
+        <input type="text" id="ef-title" placeholder="Ej. Noche de Salsa">
+      </div>
+      <div class="form-group"><label>Fecha *</label><input type="date" id="ef-date"></div>
+      <div class="form-group"><label>Hora *</label><input type="time" id="ef-time"></div>
+      <div class="form-group"><label>Lugar / Venue *</label><input type="text" id="ef-venue" placeholder="Club People, Piso 3"></div>
+      <div class="form-group"><label>Categoría *</label><input type="text" id="ef-cat" placeholder="Electrónica, Salsa…"></div>
+      <div class="form-group"><label>Precio base (Bs.) *</label><input type="number" id="ef-price" placeholder="80" min="0"></div>
+      <div class="form-group"><label>Cupos totales *</label><input type="number" id="ef-stock" placeholder="100" min="0"></div>
+      <div class="form-group fg2-full">
+        <label>Descripción</label>
+        <textarea id="ef-desc" rows="3" placeholder="Describe el evento…"></textarea>
+      </div>
+      <div class="form-group fg2-full">
+        <label>URL imagen (opcional)</label>
+        <input type="url" id="ef-img" placeholder="https://…">
+      </div>
+      <div class="form-group fg2-full chk-group">
+        <label><input type="checkbox" id="ef-active"> Publicar evento</label>
+      </div>
+    </div>
+    <div id="ef-error" class="err-msg hidden"></div>
+    <div class="mc-actions">
+      <button class="btn-sec" id="btn-ef-cancel">Cancelar</button>
+      <button class="btn-cta" id="btn-ef-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Restock (Admin) -->
+<div id="modal-rs" class="modal hidden">
+  <div class="modal-bg" id="bg-rs"></div>
+  <div class="modal-card">
+    <div class="mc-header">
+      <h2 class="mc-title">Ajustar Cupos</h2>
+      <button class="mc-close" id="close-rs">✕</button>
+    </div>
+    <p id="rs-name" class="mc-sub"></p>
+    <div class="form-group">
+      <label>Nuevo total de cupos</label>
+      <input type="number" id="rs-val" min="0" placeholder="0">
+    </div>
+    <div class="mc-actions">
+      <button class="btn-sec" id="btn-rs-cancel">Cancelar</button>
+      <button class="btn-cta" id="btn-rs-ok">Actualizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VISTAS
+══════════════════════════════════════ -->
+<main id="main">
+
+  <!-- ── Inicio ── -->
+  <div id="view-home" class="view active">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-cnt">
+        <span class="hero-pill">People Potosí</span>
+        <h1 class="hero-h">La noche<br><span class="ac">empieza aquí.</span></h1>
+        <p class="hero-p">Compra tu acceso en segundos y entra sin perder tiempo.</p>
+        <button class="btn-cta btn-lg" id="btn-hero-events">Ver Eventos</button>
+      </div>
+    </section>
+    <section class="how-section">
+      <div class="sw">
+        <h2 class="how-title">Así de simple</h2>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-num">01</div>
+            <div class="how-icon">🗓</div>
+            <div><strong>Elige</strong><p>Selecciona el evento y tus mesas.</p></div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">02</div>
+            <div class="how-icon">📱</div>
+            <div><strong>Paga</strong><p>Escanea el QR configurado por People.</p></div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">03</div>
+            <div class="how-icon">⚡</div>
+            <div><strong>Entra</strong><p>Recibe tu QR de acceso tras la aprobación.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── Eventos ── -->
+  <div id="view-events" class="view hidden">
+    <div class="sw" style="padding-top:88px">
+      <div class="ev-header">
+        <div>
+          <h2 class="sec-title">Eventos</h2>
+          <p class="sec-sub">Próximas fechas People</p>
+        </div>
+        <div class="ev-controls">
+          <input type="search" id="search-ev" class="search-box" placeholder="Buscar…">
+          <button class="btn-refresh" id="btn-refresh" title="Recargar">↻</button>
+        </div>
+      </div>
+      <div id="cat-filters" class="cat-row"></div>
+      <div id="st-loading" class="state-block"><div class="spinner"></div><span>Cargando…</span></div>
+      <div id="st-error"   class="state-block hidden"><div class="st-icon">⚠️</div><p id="st-err-msg">Error de conexión.</p><button class="btn-cta" id="btn-retry">Reintentar</button></div>
+      <div id="st-empty"   class="state-block hidden"><div class="st-icon">🗓</div><p>No hay eventos publicados todavía.</p></div>
+      <div id="ev-grid"    class="ev-grid hidden"></div>
+    </div>
+  </div>
+
+  <!-- ── Perfil ── -->
+  <div id="view-profile" class="view hidden">
+    <div class="sw" style="padding-top:88px">
+      <h2 class="sec-title">Mi cuenta</h2>
+      <p class="sec-sub">People Club · Potosí</p>
+      <div class="profile-card" id="profile-info"></div>
+      <h3 class="res-title">Mis Reservas</h3>
+      <div id="res-empty" class="state-block hidden"><div class="st-icon">📋</div><p>Aún no tienes reservas.</p></div>
+      <div id="res-grid" class="res-grid hidden"></div>
+    </div>
+  </div>
+
+  <!-- ── Redes / Ubicación ── -->
+  <div id="view-contact" class="view hidden">
+    <div class="sw" style="padding-top:88px">
+      <h2 class="sec-title">Redes y Ubicación</h2>
+      <p class="sec-sub">Haz clic en la plataforma que quieres abrir</p>
+      <div class="contact-grid">
+        <!-- Redes -->
+        <div class="contact-card">
+          <h3 class="contact-card-title">Redes Sociales</h3>
+          <a class="social-link" href="https://api.whatsapp.com/send?phone=59165807490" target="_blank" rel="noopener noreferrer">
+            <div class="sl-icon sl-wa">
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <div class="sl-info"><span class="sl-name">WhatsApp</span><span class="sl-handle">Contáctanos directamente</span></div>
+            <svg class="sl-arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+          <a class="social-link" href="https://www.instagram.com/peoplebo24" target="_blank" rel="noopener noreferrer">
+            <div class="sl-icon sl-ig">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </div>
+            <div class="sl-info"><span class="sl-name">Instagram</span><span class="sl-handle">@peoplebo24</span></div>
+            <svg class="sl-arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+          <a class="social-link" href="https://www.facebook.com/PeoplePotosi" target="_blank" rel="noopener noreferrer">
+            <div class="sl-icon sl-fb">
+              <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </div>
+            <div class="sl-info"><span class="sl-name">Facebook</span><span class="sl-handle">People Potosí</span></div>
+            <svg class="sl-arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+          <a class="social-link" href="https://www.google.com/maps?q=PEOPLE+DISCOTECA+Potosi" target="_blank" rel="noopener noreferrer">
+            <div class="sl-icon sl-map">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+            </div>
+            <div class="sl-info"><span class="sl-name">Ubicación</span><span class="sl-handle">Club People, Potosí</span></div>
+            <svg class="sl-arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+        <!-- Mapa -->
+        <div class="contact-card map-card">
+          <h3 class="contact-card-title">¿Dónde estamos?</h3>
+          <div class="map-wrap">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3759.3731713936004!2d-65.7677454!3d-19.568507!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93f94ddf7e72f989%3A0x9f9b795ba9cf6fac!2sPEOPLE%20DISCOTECA!5e0!3m2!1ses-419!2sbo!4v1795225948559!5m2!1ses-419!2sbo"
+              width="600" height="400"
+              style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              title="Ubicación People Discoteca">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Admin ── -->
+  <div id="view-admin" class="view hidden">
+    <div class="sw" style="padding-top:88px">
+      <div class="adm-header">
+        <div>
+          <h2 class="sec-title">Panel de Control</h2>
+          <p class="sec-sub">Gestión de eventos en tiempo real</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn-cta" id="btn-new-ev">+ Nuevo Evento</button>
+          <button class="btn-sample" id="btn-load-sample">Cargar Ejemplos</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="adm-table">
+          <thead><tr>
+            <th>Evento</th><th>Fecha</th><th>Categoría</th><th>Precio</th><th>Cupos</th><th>Estado</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="adm-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="sw footer-row">
+    <span class="s-icon" style="font-size:.9rem">◈</span>
+    <span>PEOPLE Potosí &nbsp;·&nbsp; © 2026 Todos los derechos reservados</span>
+  </div>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
